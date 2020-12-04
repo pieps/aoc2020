@@ -12,9 +12,12 @@ fn main() -> Result<(), Box<dyn Error>> {
         .flat_map(|l| l.trim().parse())
         .collect();
 
-    for first in v.iter() {
-        for second in v.iter().skip(1) {
-            for third in v.iter().skip(2) {
+    for i in 0..v.len() - 2 {
+        for j in i + 1..v.len() - 1 {
+            for k in j + 1..v.len() {
+                let first = v.get(i).unwrap();
+                let second = v.get(j).unwrap();
+                let third = v.get(k).unwrap();
                 if first + second + third == 2020 {
                     println!("{}", first * second * third);
                 }
