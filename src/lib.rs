@@ -19,7 +19,7 @@ pub struct Passport {
     hgt: String,
     hcl: String,
     ecl: String,
-    pid: u64,
+    pid: String,
     cid: Option<u32>,
 }
 
@@ -38,7 +38,7 @@ impl Passport {
                 hgt: map.remove("hgt").unwrap(),
                 hcl: map.remove("hcl").unwrap(),
                 ecl: map.remove("ecl").unwrap(),
-                pid: map.remove("pid").unwrap().parse().unwrap(),
+                pid: map.remove("pid").unwrap(),
                 cid: map.remove("cid").map(|s| s.parse().ok()).flatten(),
             })
         } else {
@@ -72,11 +72,7 @@ impl FromIterator<String> for BatchFile {
 
 impl FromIterator<io::Result<String>> for BatchFile {
     fn from_iter<T: IntoIterator<Item = io::Result<String>>>(iter: T) -> Self {
-        let mut bf = BatchFile::new();
-        for line in iter {
-            bf.put_line(line.unwrap());
-        }
-        bf
+        iter.into_iter().map(Result::unwrap).collect()
     }
 }
 
@@ -97,12 +93,22 @@ impl Iterator for BatchFile {
     fn next(&mut self) -> Option<Passport> {
         let mut map: HashMap<String, String> = HashMap::with_capacity(FIELDS.len());
         loop {
-            let line = self.lines.pop_front().unwrap_or("".to_string());
-            if line == "" {
+            let line = self.lines.pop_front();
+            if line.is_none() {
                 return Passport::from_map(map).ok();
             }
-            let fields = line.split(" ");
-            map.extend(fields.map(to_entry));
+
+            let line = line.unwrap();
+            if line == "".to_string() {
+                let p = Passport::from_map(map);
+                if p.is_ok() {
+                    return p.ok();
+                }
+                map = HashMap::with_capacity(FIELDS.len());
+            } else {
+                let fields = line.split(" ");
+                map.extend(fields.map(to_entry));
+            }
         }
     }
 }
