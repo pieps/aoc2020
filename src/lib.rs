@@ -34,6 +34,7 @@ where
 }
 
 pub fn process_group(lines: &Vec<String>) -> usize {
-    let set: HashSet<char> = lines.iter().flat_map(|l| l.chars()).collect();
+    let mut iter = lines.iter().map(|l| l.chars().collect::<HashSet<char>>());
+    let set: HashSet<char> = iter.next().map(|s| iter.fold(s, |a, b| &a & &b)).unwrap();
     set.len()
 }
