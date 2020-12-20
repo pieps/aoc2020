@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use std::collections::HashSet;
+use std::{cell::Cell, collections::HashMap};
 
 use lazy_static::lazy_static;
 use regex::{Captures, Regex};
@@ -21,6 +21,7 @@ lazy_static! {
 pub struct Rule {
     pub id: String,
     children: HashMap<String, u32>,
+    total_count: Cell<Option<u32>>,
 }
 
 pub fn parse_rule(line: String) -> Rule {
@@ -39,7 +40,11 @@ pub fn parse_rule(line: String) -> Rule {
             )
         })
         .collect();
-    Rule { id, children }
+    Rule {
+        id,
+        children,
+        total_count: Cell::new(Option::None),
+    }
 }
 
 #[derive(Debug)]
@@ -50,6 +55,26 @@ pub struct Rules {
 impl Rules {
     pub fn new(rules: HashMap<String, Rule>) -> Self {
         Rules { rules }
+    }
+
+    pub fn count_bags(&self, bag: &str) -> u32 {
+        let rule = self.rules.get(bag).unwrap();
+        if rule.total_count.get().is_some() {
+            return rule.total_count.get().unwrap();
+        }
+        let total_count = rule
+            .children
+            .iter()
+            .map(|(id, count)| count * self.count_bags(id))
+            .sum::<u32>()
+            + 1;
+
+        self.rules
+            .get(bag)
+            .unwrap()
+            .total_count
+            .set(Some(total_count));
+        total_count
     }
 
     pub fn find_node(&self, needle: &str) -> HashSet<&str> {

@@ -13,6 +13,6 @@ fn main() -> Result<(), Box<dyn Error>> {
             .map(|r| (r.id.clone(), r))
             .collect(),
     );
-    println!("{}", rules.find_node("shiny gold").len());
+    println!("{}", rules.count_bags("shiny gold") - 1);
     Ok(())
 }
