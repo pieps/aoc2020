@@ -1,13 +1,10 @@
 use std::error::Error;
-use std::fs::File;
-use std::io::prelude::*;
-use std::io::BufReader;
+use std::fs;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let f = File::open("data.txt")?;
-    let reader = BufReader::new(f);
-    let lines: Vec<String> = reader.lines().flatten().collect();
-    let acc = day8::Program::new(lines).run();
-    println!("{}", acc);
+    let f = fs::read_to_string("data.txt")?;
+    let lines: Vec<&str> = f.split('\n').filter(|l| !l.is_empty()).collect();
+    let acc = day8::Solver::new(lines).solve();
+    println!("{:?}", acc);
     Ok(())
 }
