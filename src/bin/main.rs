@@ -10,7 +10,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         .filter(|l| !l.is_empty())
         .flat_map(|l| l.parse())
         .collect();
-    let needle = day9::Day9::new(&numbers, WINDOW_SIZE).find_needle();
-    println!("{:?}", needle);
+    let d = day9::Day9::new(&numbers, WINDOW_SIZE);
+    let needle = d.find_needle();
+    let weakness = d.find_weakness(needle.unwrap());
+    println!("{:?}", weakness.unwrap());
     Ok(())
 }

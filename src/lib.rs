@@ -8,10 +8,17 @@ mod tests {
     ];
 
     #[test]
-    fn it_works() {
+    fn needle_found() {
         let v = Vec::from(INPUT);
         let d = Day9::new(&v, 5);
         assert_eq!(d.find_needle(), Some(127));
+    }
+
+    #[test]
+    fn weakness_found() {
+        let v = Vec::from(INPUT);
+        let d = Day9::new(&v, 5);
+        assert_eq!(d.find_weakness(127), Some(62));
     }
 }
 
@@ -26,6 +33,27 @@ impl<'a> Day9<'a> {
             numbers,
             window_size,
         }
+    }
+
+    pub fn find_weakness(&self, needle: u32) -> Option<u32> {
+        self.sum_finder(needle)
+            .map(|set| set.iter().max().unwrap() + set.iter().min().unwrap())
+    }
+
+    fn sum_finder(&self, needle: u32) -> Option<VecDeque<u32>> {
+        let mut set: VecDeque<u32> = VecDeque::new();
+        let mut sum = 0;
+        for &num in self.numbers.iter() {
+            set.push_back(num);
+            sum += num;
+            while sum > needle {
+                sum -= set.pop_front().unwrap();
+            }
+            if sum == needle {
+                return Some(set);
+            }
+        }
+        None
     }
 
     pub fn find_needle(&self) -> Option<u32> {
