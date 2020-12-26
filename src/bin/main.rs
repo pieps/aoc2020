@@ -11,5 +11,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let d = day10::Day10::new(numbers);
     let solution = d.solve();
     println!("{:?}", solution);
+    let reachable = d.reachable_from(0);
+    println!("{:?}", reachable);
     Ok(())
 }
