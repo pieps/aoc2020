@@ -1,8 +1,10 @@
+#![feature(min_const_generics)]
 mod layout;
 mod seat;
+mod solver;
 
 use layout::Layout;
-use layout::Neighbors;
+use solver::{ImmediateNeighborsSolver, Solver, VisibleNeighborsSolver};
 
 #[cfg(test)]
 mod tests {
@@ -44,23 +46,18 @@ impl Day11 {
             layout: Layout::parse(input),
         }
     }
+
     pub fn solve_part1(&self) -> usize {
-        let mut layout = self.layout.clone();
-        loop {
-            let layout_copy = layout.one_iteration(Neighbors::Immediate, 4);
-            if layout_copy == layout {
-                break;
-            } else {
-                layout = layout_copy;
-            }
-        }
-        layout.count_occupied()
+        Day11::solve(self.layout.clone(), ImmediateNeighborsSolver::new())
     }
 
     pub fn solve_part2(&self) -> usize {
-        let mut layout = self.layout.clone();
+        Day11::solve(self.layout.clone(), VisibleNeighborsSolver::new())
+    }
+
+    fn solve<const N: usize>(mut layout: Layout, solver: Box<dyn Solver<N>>) -> usize {
         loop {
-            let layout_copy = layout.one_iteration(Neighbors::Visible, 5);
+            let layout_copy = solver.one_iteration(&layout);
             if layout_copy == layout {
                 break;
             } else {
