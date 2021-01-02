@@ -10,6 +10,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "aoc2020"
+version = "0.1.0"
+dependencies = [
+ "gumdrop",
+ "itertools",
+ "lazy_static",
+ "rayon",
+ "regex",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -74,106 +85,30 @@ dependencies = [
 ]
 
 [[package]]
-name = "day1-1"
-version = "0.1.0"
-
-[[package]]
-name = "day1-2"
-version = "0.1.0"
-
-[[package]]
-name = "day10"
-version = "0.1.0"
-
-[[package]]
-name = "day11"
-version = "0.1.0"
-dependencies = [
- "itertools 0.10.0",
-]
-
-[[package]]
-name = "day2-1"
-version = "0.1.0"
-dependencies = [
- "lazy_static",
- "regex",
-]
-
-[[package]]
-name = "day2-2"
-version = "0.1.0"
-dependencies = [
- "lazy_static",
- "regex",
-]
-
-[[package]]
-name = "day3-1"
-version = "0.1.0"
-
-[[package]]
-name = "day3-2"
-version = "0.1.0"
-
-[[package]]
-name = "day4-1"
-version = "0.1.0"
-dependencies = [
- "itertools 0.9.0",
- "lazy_static",
-]
-
-[[package]]
-name = "day4-2"
-version = "0.1.0"
-dependencies = [
- "itertools 0.9.0",
- "lazy_static",
- "regex",
-]
-
-[[package]]
-name = "day5-1"
-version = "0.1.0"
-dependencies = [
- "lazy_static",
- "regex",
-]
-
-[[package]]
-name = "day6"
-version = "0.1.0"
-
-[[package]]
-name = "day7"
-version = "0.1.0"
-dependencies = [
- "lazy_static",
- "regex",
-]
-
-[[package]]
-name = "day8"
-version = "0.1.0"
-dependencies = [
- "lazy_static",
- "rayon",
- "regex",
-]
-
-[[package]]
-name = "day9"
-version = "0.1.0"
-dependencies = [
- "itertools 0.9.0",
-]
-
-[[package]]
 name = "either"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457"
+
+[[package]]
+name = "gumdrop"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "46571f5d540478cf70d2a42dd0d6d8e9f4b9cc7531544b93311e657b86568a0b"
+dependencies = [
+ "gumdrop_derive",
+]
+
+[[package]]
+name = "gumdrop_derive"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "915ef07c710d84733522461de2a734d4d62a3fd39a4d4f404c2f385ef8618d05"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "hermit-abi"
@@ -182,15 +117,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5aca5565f760fb5b220e499d72710ed156fdb74e631659e99377d9ebfbd13ae8"
 dependencies = [
  "libc",
-]
-
-[[package]]
-name = "itertools"
-version = "0.9.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "284f18f85651fe11e8a991b2adb42cb078325c996ed026d994719efcfca1d54b"
-dependencies = [
- "either",
 ]
 
 [[package]]
@@ -237,6 +163,24 @@ checksum = "05499f3756671c15885fee9034446956fff3f243d6077b91e5767df161f766b3"
 dependencies = [
  "hermit-abi",
  "libc",
+]
+
+[[package]]
+name = "proc-macro2"
+version = "1.0.24"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1e0704ee1a7e00d7bb417d0770ea303c1bccbabf0ef1667dae92b5967f5f8a71"
+dependencies = [
+ "unicode-xid",
+]
+
+[[package]]
+name = "quote"
+version = "1.0.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "991431c3519a3f36861882da93630ce66b52918dcf1b8e2fd66b397fc96f28df"
+dependencies = [
+ "proc-macro2",
 ]
 
 [[package]]
@@ -289,6 +233,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d29ab0c6d3fc0ee92fe66e2d99f700eab17a8d57d1c1d3b748380fb20baa78cd"
 
 [[package]]
+name = "syn"
+version = "1.0.56"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a9802ddde94170d186eeee5005b798d9c159fa970403f1be19976d0cfb939b72"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "unicode-xid",
+]
+
+[[package]]
 name = "thread_local"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -296,3 +251,9 @@ checksum = "d40c6d1b69745a6ec6fb1ca717914848da4b44ae29d9b3080cbee91d72a69b14"
 dependencies = [
  "lazy_static",
 ]
+
+[[package]]
+name = "unicode-xid"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f7fe0bb3479651439c9112f72b6c505038574c9fbb575ed1bf3b797fa39dd564"
