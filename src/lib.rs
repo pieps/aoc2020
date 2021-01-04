@@ -1,43 +1,107 @@
-//use day1::Day1;
-use std::fs;
+mod day1;
+mod day2;
+mod day3;
+mod day4;
+mod day5;
+
+use std::fmt::{Display, Formatter};
+use std::ops::Range;
+use std::{error::Error, fs};
 
 pub trait Day {
-    fn solve1(&self) -> u64;
-    fn solve2(&self) -> u64;
+    fn solve1(&self) -> Result<u64, Box<dyn Error>>;
+    fn solve2(&self) -> Result<u64, Box<dyn Error>>;
 }
 
-pub fn get_day(day: u32) -> Result<Box<dyn Day>, String> {
+#[derive(Debug, Clone)]
+pub struct NoSolutionFoundError {
+    day: u32,
+    part: u32,
+}
+
+impl NoSolutionFoundError {
+    pub fn new(day: u32, part: u32) -> Box<NoSolutionFoundError> {
+        Box::new(NoSolutionFoundError { day, part })
+    }
+}
+
+impl Display for NoSolutionFoundError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "No solution found for day {}, part {}",
+            self.day, self.part
+        )
+    }
+}
+
+impl Error for NoSolutionFoundError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        None
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct OutOfBoundsError {
+    value: u32,
+    bounds: Range<u32>,
+}
+
+impl OutOfBoundsError {
+    pub fn new(value: u32, bounds: Range<u32>) -> Box<OutOfBoundsError> {
+        Box::new(OutOfBoundsError { value, bounds })
+    }
+}
+
+impl Display for OutOfBoundsError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Value {} not in the range [{}..{}].",
+            self.value, self.bounds.start, self.bounds.end
+        )
+    }
+}
+
+impl Error for OutOfBoundsError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        None
+    }
+}
+
+pub fn get_day(day: u32) -> Result<Box<dyn Day>, Box<dyn Error>> {
     if day >= 25 || day == 0 {
-        Err(format!("Day must be in the range [1..25]. Found {}.", day))
+        Err(OutOfBoundsError::new(day, 1..25))
     } else {
-        let l = fs::read_to_string(format!("data/day{}.txt", day));
+        let l = fs::read_to_string(format!("data/day{}.txt", day))?;
+        let lines: Vec<&str> = l.split('\n').filter(|l| !l.is_empty()).collect();
         match day {
-            //1 => Ok(Day1::new(l)),
-            //2 => Ok(Day2::new(l)),
-            //3 => Ok(Day3::new(l)),
-            //4 => Ok(Day4::new(l)),
-            //5 => Ok(Day5::new(l)),
-            //6 => Ok(Day6::new(l)),
-            //7 => Ok(Day7::new(l)),
-            //8 => Ok(Day8::new(l)),
-            //9 => Ok(Day9::new(l)),
-            //10 => Ok(Day10::new(l)),
-            //11 => Ok(Day11::new(l)),
-            //12 => Ok(Day12::new(l)),
-            //13 => Ok(Day13::new(l)),
-            //14 => Ok(Day14::new(l)),
-            //15 => Ok(Day15::new(l)),
-            //16 => Ok(Day16::new(l)),
-            //17 => Ok(Day17::new(l)),
-            //18 => Ok(Day18::new(l)),
-            //19 => Ok(Day19::new(l)),
-            //20 => Ok(Day20::new(l)),
-            //21 => Ok(Day21::new(l)),
-            //22 => Ok(Day22::new(l)),
-            //23 => Ok(Day23::new(l)),
-            //24 => Ok(Day24::new(l)),
-            //25 => Ok(Day25::new(l)),
-            _ => Err(format!("Day must be in the range [1..25]. Found {}.", day)),
+            1 => Ok(day1::Day1::new(lines)),
+            2 => Ok(day2::Day2::new(lines)),
+            3 => Ok(day3::Day3::new(lines)),
+            4 => Ok(day4::Day4::new(lines)),
+            5 => Ok(day5::Day5::new(lines)),
+            //6 => Ok(day6::Day6::new(lines)),
+            //7 => Ok(day7::Day7::new(lines)),
+            //8 => Ok(day8::Day8::new(lines)),
+            //9 => Ok(day9::Day9::new(lines)),
+            //10 => Ok(day10::Day10::new(lines)),
+            //11 => Ok(day11::Day11::new(lines)),
+            //12 => Ok(day12::Day12::new(lines)),
+            //13 => Ok(day13::Day13::new(lines)),
+            //14 => Ok(day14::Day14::new(lines)),
+            //15 => Ok(day15::Day15::new(lines)),
+            //16 => Ok(day16::Day16::new(lines)),
+            //17 => Ok(day17::Day17::new(lines)),
+            //18 => Ok(day18::Day18::new(lines)),
+            //19 => Ok(day19::Day19::new(lines)),
+            //20 => Ok(day20::Day20::new(lines)),
+            //21 => Ok(day21::Day21::new(lines)),
+            //22 => Ok(day22::Day22::new(lines)),
+            //23 => Ok(day23::Day23::new(lines)),
+            //24 => Ok(day24::Day24::new(lines)),
+            //25 => Ok(day25::Day25::new(lines)),
+            _ => Err(OutOfBoundsError::new(day, 1..25)),
         }
     }
 }

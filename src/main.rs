@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use aoc2020;
 use aoc2020::Day;
 use gumdrop::Options;
@@ -11,7 +13,7 @@ struct Opts {
     part: u8,
 }
 
-fn main() -> Result<(), String> {
+fn main() -> Result<(), Box<dyn Error>> {
     let opts = Opts::parse_args_default_or_exit();
 
     let day = aoc2020::get_day(opts.day)?;
@@ -24,7 +26,7 @@ fn main() -> Result<(), String> {
         "Day {}, part {}: {}",
         opts.day,
         opts.part,
-        part(day.as_ref())
+        part(day.as_ref())?
     );
     Ok(())
 }
