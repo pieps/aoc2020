@@ -69,12 +69,16 @@ impl Error for OutOfBoundsError {
     }
 }
 
+pub fn split_input(text: &str) -> Vec<&str> {
+    text.trim_end().split('\n').collect()
+}
+
 pub fn get_day(day: u32) -> Result<Box<dyn Day>, Box<dyn Error>> {
     if day >= 25 || day == 0 {
         Err(OutOfBoundsError::new(day, 1..25))
     } else {
         let l = fs::read_to_string(format!("data/day{}.txt", day))?;
-        let lines: Vec<&str> = l.split('\n').filter(|l| !l.is_empty()).collect();
+        let lines: Vec<&str> = split_input(&l);
         match day {
             1 => Ok(day1::Day1::new(lines)),
             2 => Ok(day2::Day2::new(lines)),

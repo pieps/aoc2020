@@ -4,6 +4,45 @@ use std::error::Error;
 
 use crate::Day;
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const SAMPLE: &str = r"1-3 a: abcde
+1-3 b: cdefg
+2-9 c: ccccccccc";
+
+    #[test]
+    fn day2_1_sample() {
+        let lines: Vec<&str> = crate::split_input(SAMPLE);
+        let day2 = Day2::new(lines);
+        assert_eq!(2, day2.solve1().unwrap());
+    }
+
+    #[test]
+    fn day2_2_sample() {
+        let lines: Vec<&str> = crate::split_input(SAMPLE);
+        let day2 = Day2::new(lines);
+        assert_eq!(1, day2.solve2().unwrap());
+    }
+
+    #[test]
+    fn day2_1() {
+        let file = std::fs::read_to_string("data/day2.txt").unwrap();
+        let lines: Vec<&str> = crate::split_input(&file);
+        let day2 = Day2::new(lines);
+        assert_eq!(477, day2.solve1().unwrap());
+    }
+
+    #[test]
+    fn day2_2() {
+        let file = std::fs::read_to_string("data/day2.txt").unwrap();
+        let lines: Vec<&str> = crate::split_input(&file);
+        let day2 = Day2::new(lines);
+        assert_eq!(686, day2.solve2().unwrap());
+    }
+}
+
 struct Entry(Rule, Password);
 struct Rule {
     start: usize,

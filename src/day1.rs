@@ -3,6 +3,48 @@ use std::error::Error;
 use crate::Day;
 use crate::NoSolutionFoundError;
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const SAMPLE: &str = "1721
+979
+366
+299
+675
+1456";
+
+    #[test]
+    fn day1_1_sample() {
+        let lines: Vec<&str> = crate::split_input(SAMPLE);
+        let day1 = Day1::new(lines);
+        assert_eq!(514579, day1.solve1().unwrap());
+    }
+
+    #[test]
+    fn day1_2_sample() {
+        let lines: Vec<&str> = crate::split_input(SAMPLE);
+        let day1 = Day1::new(lines);
+        assert_eq!(241861950, day1.solve2().unwrap());
+    }
+
+    #[test]
+    fn day1_1() {
+        let file = std::fs::read_to_string("data/day1.txt").unwrap();
+        let lines: Vec<&str> = crate::split_input(&file);
+        let day1 = Day1::new(lines);
+        assert_eq!(964875, day1.solve1().unwrap());
+    }
+
+    #[test]
+    fn day1_2() {
+        let file = std::fs::read_to_string("data/day1.txt").unwrap();
+        let lines: Vec<&str> = crate::split_input(&file);
+        let day1 = Day1::new(lines);
+        assert_eq!(158661360, day1.solve2().unwrap());
+    }
+}
+
 pub struct Day1 {
     expenses: Vec<u32>,
 }

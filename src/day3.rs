@@ -1,6 +1,53 @@
 use crate::Day;
-
 use std::iter::Iterator;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const SAMPLE: &str = r"..##.......
+#...#...#..
+.#....#..#.
+..#.#...#.#
+.#...##..#.
+..#.##.....
+.#.#.#....#
+.#........#
+#.##...#...
+#...##....#
+.#..#...#.#
+";
+
+    #[test]
+    fn day3_1_sample() {
+        let lines: Vec<&str> = crate::split_input(SAMPLE);
+        let day3 = Day3::new(lines);
+        assert_eq!(7, day3.solve1().unwrap());
+    }
+
+    #[test]
+    fn day3_2_sample() {
+        let lines: Vec<&str> = crate::split_input(SAMPLE);
+        let day3 = Day3::new(lines);
+        assert_eq!(336, day3.solve2().unwrap());
+    }
+
+    #[test]
+    fn day3_1() {
+        let file = std::fs::read_to_string("data/day3.txt").unwrap();
+        let lines: Vec<&str> = crate::split_input(&file);
+        let day3 = Day3::new(lines);
+        assert_eq!(268, day3.solve1().unwrap());
+    }
+
+    #[test]
+    fn day3_2() {
+        let file = std::fs::read_to_string("data/day3.txt").unwrap();
+        let lines: Vec<&str> = crate::split_input(&file);
+        let day3 = Day3::new(lines);
+        assert_eq!(3093068400, day3.solve2().unwrap());
+    }
+}
 
 pub type Node = u32;
 
