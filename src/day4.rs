@@ -211,7 +211,6 @@ impl BatchFile {
         }
     }
     pub fn put_line(&mut self, line: &str) {
-        println!("line: {}", line);
         self.lines.push_back(line.to_string());
     }
 

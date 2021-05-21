@@ -75,6 +75,22 @@ mod tests {
         let haystack: Vec<u32> = (5..743).filter(|v| *v != needle).collect();
         assert_eq!(find_needle(&haystack), needle);
     }
+
+    #[test]
+    fn day5_1() {
+        let file = std::fs::read_to_string("data/day5.txt").unwrap();
+        let lines: Vec<&str> = crate::split_input(&file);
+        let day5 = Day5::new(lines);
+        assert_eq!(904, day5.solve1().unwrap());
+    }
+
+    #[test]
+    fn day5_2() {
+        let file = std::fs::read_to_string("data/day5.txt").unwrap();
+        let lines: Vec<&str> = crate::split_input(&file);
+        let day5 = Day5::new(lines);
+        assert_eq!(669, day5.solve2().unwrap());
+    }
 }
 
 pub struct Day5 {
