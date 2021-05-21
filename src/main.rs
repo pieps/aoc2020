@@ -6,11 +6,14 @@ use gumdrop::Options;
 
 #[derive(Options)]
 struct Opts {
-    #[options(help = "Which day to run.")]
+    #[options(help = "Which day to run.", required)]
     day: u32,
 
-    #[options(help = "Which part to run.")]
+    #[options(help = "Which part to run.", required)]
     part: u8,
+
+    #[options(help = "Print this message.")]
+    help: bool,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
