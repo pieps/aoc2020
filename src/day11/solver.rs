@@ -1,5 +1,6 @@
-use crate::layout::Layout;
-use crate::seat::Seat;
+use crate::day11::layout::Layout;
+use crate::day11::seat::Seat;
+
 pub trait Solver<const N: usize> {
     fn empty_trigger(&self) -> usize {
         N

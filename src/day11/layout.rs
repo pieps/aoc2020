@@ -1,4 +1,4 @@
-use crate::seat::Seat;
+use crate::day11::seat::Seat;
 
 use std::fmt::{self, Debug, Display, Formatter};
 
