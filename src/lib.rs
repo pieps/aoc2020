@@ -6,6 +6,7 @@ mod day5;
 mod day6;
 mod day7;
 mod day8;
+mod day9;
 
 use std::fmt::{Display, Formatter};
 use std::ops::Range;
@@ -91,7 +92,7 @@ pub fn get_day(day: u32) -> Result<Box<dyn Day>, Box<dyn Error>> {
             6 => Ok(day6::Day6::new(lines)),
             7 => Ok(day7::Day7::new(lines)),
             8 => Ok(day8::Day8::new(lines)),
-            //9 => Ok(day9::Day9::new(lines)),
+            9 => Ok(day9::Day9::<25>::new(lines)),
             //10 => Ok(day10::Day10::new(lines)),
             //11 => Ok(day11::Day11::new(lines)),
             //12 => Ok(day12::Day12::new(lines)),
