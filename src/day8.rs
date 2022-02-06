@@ -1,13 +1,68 @@
+use crate::{Day, NoSolutionFoundError};
+
 use lazy_static::lazy_static;
 use rayon::prelude::*;
 use regex::Regex;
-use std::collections::HashSet;
+use std::{
+    collections::HashSet,
+    convert::TryInto,
+    error::Error,
+    fmt::{Display, Formatter},
+};
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
+    const SAMPLE: &str = "nop +0
+acc +1
+jmp +4
+acc +3
+jmp -3
+acc -99
+acc +1
+jmp -4
+acc +6";
+
     #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
+    fn day8_1_sample() {
+        let lines: Vec<&str> = crate::split_input(SAMPLE);
+        let day8 = Day8::new(lines);
+        assert_eq!(5, day8.solve1().unwrap());
+    }
+
+    #[test]
+    fn day8_2_sample() {
+        let lines: Vec<&str> = crate::split_input(SAMPLE);
+        let day8 = Day8::new(lines);
+        assert_eq!(8, day8.solve2().unwrap());
+    }
+}
+
+pub struct Day8 {
+    lines: Vec<String>,
+}
+
+impl Day8 {
+    pub fn new(lines: Vec<&str>) -> Box<dyn Day> {
+        Box::new(Day8 {
+            lines: lines.into_iter().map(str::to_string).collect(),
+        })
+    }
+}
+
+impl Day for Day8 {
+    fn solve1(&self) -> Result<i64, Box<dyn Error>> {
+        let mut program = Program::new(&self.lines);
+        match program.run() {
+            Ok(a) | Err(ProgramError::InfiniteLoop(a)) => Ok(a),
+            _ => Err(NoSolutionFoundError::new(8, 1)),
+        }
+    }
+
+    fn solve2(&self) -> Result<i64, Box<dyn Error>> {
+        let solver = Solver::new(&self.lines);
+        Ok(solver.solve())
     }
 }
 
@@ -17,9 +72,9 @@ lazy_static! {
 
 #[derive(Clone, Copy)]
 enum Instruction {
-    NOP(i32),
-    ACC(i32),
-    JMP(i32),
+    NOP(i64),
+    ACC(i64),
+    JMP(i64),
 }
 
 impl Instruction {
@@ -42,21 +97,41 @@ impl Instruction {
     }
 }
 
+#[derive(Debug, Clone)]
+pub enum ProgramError {
+    InfiniteLoop(i64),
+    InvalidIp(i64),
+}
+
+impl std::error::Error for ProgramError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        None
+    }
+}
+
+impl Display for ProgramError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ProgramError::InvalidIp(ip) => {
+                write!(f, "Instruction pointer reached invalid position: {}", ip)
+            }
+            ProgramError::InfiniteLoop(acc) => {
+                write!(f, "Infinite loop found. Accumulator at loop: {}", acc)
+            }
+        }
+    }
+}
+
 pub struct Program {
     instructions: Vec<Instruction>,
-    acc: i32,
+    acc: i64,
     ip: usize,
     visited: HashSet<usize>,
 }
 
 impl Program {
-    pub fn new(lines: Vec<&str>) -> Program {
-        Program::new_internal(
-            lines
-                .into_iter()
-                .map(Instruction::parse)
-                .collect::<Vec<_>>(),
-        )
+    pub fn new(lines: &Vec<String>) -> Program {
+        Program::new_internal(lines.iter().map(|l| Instruction::parse(l)).collect())
     }
 
     fn new_internal(instructions: Vec<Instruction>) -> Program {
@@ -68,27 +143,26 @@ impl Program {
         }
     }
 
-    pub fn run(&mut self) -> Option<i32> {
+    pub fn run(&mut self) -> Result<i64, ProgramError> {
         while !self.visited.contains(&self.ip) {
             if self.ip == self.instructions.len() {
-                return Some(self.acc);
+                return Ok(self.acc);
             }
             self.visited.insert(self.ip);
             let instruction = self.instructions.get(self.ip).unwrap();
             match instruction {
                 Instruction::ACC(i) => self.acc += i,
-                Instruction::JMP(i) => self.ip = (self.ip as i32 + i - 1) as usize,
+                Instruction::JMP(i) => {
+                    let new_ip = self.ip as i64 + i - 1;
+                    self.ip = new_ip
+                        .try_into()
+                        .map_err(|_| ProgramError::InvalidIp(new_ip))?;
+                }
                 Instruction::NOP(_) => (),
             };
             self.ip += 1;
         }
-        None
-    }
-
-    pub fn reset(&mut self) {
-        self.acc = 0;
-        self.ip = 0;
-        self.visited = HashSet::new();
+        Err(ProgramError::InfiniteLoop(self.acc))
     }
 }
 
@@ -98,14 +172,14 @@ pub struct Solver {
 }
 
 impl Solver {
-    pub fn new(lines: Vec<&str>) -> Solver {
-        let instructions: Vec<Instruction> = lines.into_iter().map(Instruction::parse).collect();
+    pub fn new(lines: &Vec<String>) -> Solver {
+        let instructions: Vec<Instruction> = lines.iter().map(|l| Instruction::parse(l)).collect();
         let possible_changes: HashSet<usize> = instructions
             .iter()
             .enumerate()
             .filter(|(_, i)| match i {
-                Instruction::NOP(_) | Instruction::JMP(_) => true,
-                _ => false,
+                Instruction::ACC(_) => false,
+                _ => true,
             })
             .map(|(p, _)| p)
             .collect();
@@ -116,8 +190,8 @@ impl Solver {
         }
     }
 
-    pub fn solve(&self) -> i32 {
-        let solutions: Vec<i32> = self
+    pub fn solve(&self) -> i64 {
+        let solutions: Vec<i64> = self
             .possible_changes
             .par_iter()
             .map(|m| self.twiddle_instruction(*m))

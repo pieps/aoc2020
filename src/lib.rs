@@ -5,14 +5,15 @@ mod day4;
 mod day5;
 mod day6;
 mod day7;
+mod day8;
 
 use std::fmt::{Display, Formatter};
 use std::ops::Range;
 use std::{error::Error, fs};
 
 pub trait Day {
-    fn solve1(&self) -> Result<u64, Box<dyn Error>>;
-    fn solve2(&self) -> Result<u64, Box<dyn Error>>;
+    fn solve1(&self) -> Result<i64, Box<dyn Error>>;
+    fn solve2(&self) -> Result<i64, Box<dyn Error>>;
 }
 
 #[derive(Debug, Clone)]
@@ -89,7 +90,7 @@ pub fn get_day(day: u32) -> Result<Box<dyn Day>, Box<dyn Error>> {
             5 => Ok(day5::Day5::new(lines)),
             6 => Ok(day6::Day6::new(lines)),
             7 => Ok(day7::Day7::new(lines)),
-            //8 => Ok(day8::Day8::new(lines)),
+            8 => Ok(day8::Day8::new(lines)),
             //9 => Ok(day9::Day9::new(lines)),
             //10 => Ok(day10::Day10::new(lines)),
             //11 => Ok(day11::Day11::new(lines)),

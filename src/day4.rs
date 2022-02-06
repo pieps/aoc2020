@@ -3,6 +3,7 @@ use itertools::Itertools;
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::collections::{HashMap, HashSet, VecDeque};
+use std::error::Error;
 use std::iter::FromIterator;
 
 #[cfg(test)]
@@ -95,12 +96,12 @@ impl Day4 {
 }
 
 impl Day for Day4 {
-    fn solve1(&self) -> Result<u64, Box<dyn std::error::Error>> {
-        Ok(self.file.iter(validate_1).collect::<Vec<()>>().len() as u64)
+    fn solve1(&self) -> Result<i64, Box<dyn Error>> {
+        Ok(self.file.iter(validate_1).collect::<Vec<()>>().len() as i64)
     }
 
-    fn solve2(&self) -> Result<u64, Box<dyn std::error::Error>> {
-        Ok(self.file.iter(validate_2).collect::<Vec<()>>().len() as u64)
+    fn solve2(&self) -> Result<i64, Box<dyn Error>> {
+        Ok(self.file.iter(validate_2).collect::<Vec<()>>().len() as i64)
     }
 }
 

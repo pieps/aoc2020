@@ -58,18 +58,18 @@ impl Day1 {
 }
 
 impl Day for Day1 {
-    fn solve1(&self) -> Result<u64, Box<dyn Error>> {
+    fn solve1(&self) -> Result<i64, Box<dyn Error>> {
         for first in self.expenses.iter() {
             for second in self.expenses.iter().skip(1) {
                 if first + second == 2020 {
-                    return Ok((first * second) as u64);
+                    return Ok((first * second) as i64);
                 }
             }
         }
         Err(NoSolutionFoundError::new(1, 1))
     }
 
-    fn solve2(&self) -> Result<u64, Box<dyn Error>> {
+    fn solve2(&self) -> Result<i64, Box<dyn Error>> {
         for i in 0..self.expenses.len() - 2 {
             for j in i + 1..self.expenses.len() - 1 {
                 for k in j + 1..self.expenses.len() {
@@ -77,7 +77,7 @@ impl Day for Day1 {
                     let second = self.expenses.get(j).unwrap();
                     let third = self.expenses.get(k).unwrap();
                     if first + second + third == 2020 {
-                        return Ok((first * second * third) as u64);
+                        return Ok((first * second * third) as i64);
                     }
                 }
             }

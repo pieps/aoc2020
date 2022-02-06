@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use crate::Day;
 use itertools::Itertools;
 
@@ -106,17 +108,17 @@ impl Day5 {
 }
 
 impl Day for Day5 {
-    fn solve1(&self) -> Result<u64, Box<dyn std::error::Error>> {
+    fn solve1(&self) -> Result<i64, Box<dyn Error>> {
         self.used_seats
             .iter()
             .sorted()
             .max()
-            .map(|s| *s as u64)
+            .map(|s| *s as i64)
             .ok_or(crate::NoSolutionFoundError::new(5, 1))
     }
 
-    fn solve2(&self) -> Result<u64, Box<dyn std::error::Error>> {
-        Ok(find_needle(&self.used_seats) as u64)
+    fn solve2(&self) -> Result<i64, Box<dyn Error>> {
+        Ok(find_needle(&self.used_seats) as i64)
     }
 }
 

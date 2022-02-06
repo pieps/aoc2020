@@ -64,11 +64,11 @@ impl Day2 {
 }
 
 impl Day for Day2 {
-    fn solve1(&self) -> Result<u64, Box<dyn Error>> {
+    fn solve1(&self) -> Result<i64, Box<dyn Error>> {
         Ok(self.entries.iter().map(Entry::check1).sum())
     }
 
-    fn solve2(&self) -> Result<u64, Box<dyn Error>> {
+    fn solve2(&self) -> Result<i64, Box<dyn Error>> {
         Ok(self.entries.iter().map(Entry::check2).sum())
     }
 }
@@ -91,7 +91,7 @@ fn process_line(line: &str) -> Entry {
 }
 
 impl Entry {
-    fn check1(&self) -> u64 {
+    fn check1(&self) -> i64 {
         let count = self.1.chars().filter(|c| c == &self.0.letter).count();
         match count {
             x if x >= self.0.start && x <= self.0.end => 1,
@@ -99,7 +99,7 @@ impl Entry {
         }
     }
 
-    fn check2(&self) -> u64 {
+    fn check2(&self) -> i64 {
         let first = self.char_at_ord(self.0.start) == self.0.letter;
         let second = self.char_at_ord(self.0.end) == self.0.letter;
         if first ^ second {

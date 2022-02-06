@@ -1,6 +1,6 @@
 use crate::Day;
 
-use std::collections::HashSet;
+use std::{collections::HashSet, error::Error};
 
 #[cfg(test)]
 mod tests {
@@ -42,20 +42,20 @@ pub struct Day6 {
 }
 
 impl Day for Day6 {
-    fn solve1(&self) -> Result<u64, Box<dyn std::error::Error>> {
+    fn solve1(&self) -> Result<i64, Box<dyn Error>> {
         let mut total = 0;
         for line in &self.lines {
             let set: HashSet<char> = line.iter().flat_map(|l| l.chars()).collect();
-            total += set.len() as u64;
+            total += set.len() as i64;
         }
         Ok(total)
     }
-    fn solve2(&self) -> Result<u64, Box<dyn std::error::Error>> {
+    fn solve2(&self) -> Result<i64, Box<dyn Error>> {
         let mut total = 0;
         for line in &self.lines {
             let mut iter = line.iter().map(|l| l.chars().collect::<HashSet<char>>());
             let set: HashSet<char> = iter.next().map(|s| iter.fold(s, |a, b| &a & &b)).unwrap();
-            total += set.len() as u64;
+            total += set.len() as i64;
         }
         Ok(total)
     }

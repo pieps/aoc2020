@@ -1,5 +1,5 @@
 use crate::Day;
-use std::iter::Iterator;
+use std::{error::Error, iter::Iterator};
 
 #[cfg(test)]
 mod tests {
@@ -109,18 +109,18 @@ impl Day3 {
 }
 
 impl Day for Day3 {
-    fn solve1(&self) -> Result<u64, Box<dyn std::error::Error>> {
+    fn solve1(&self) -> Result<i64, Box<dyn Error>> {
         let g: Graph = Graph::new(&self.nodes, 3, 1);
-        Ok(g.sum::<u32>() as u64)
+        Ok(g.sum::<u32>() as i64)
     }
 
-    fn solve2(&self) -> Result<u64, Box<dyn std::error::Error>> {
+    fn solve2(&self) -> Result<i64, Box<dyn Error>> {
         let params: Vec<(usize, usize)> = vec![(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)];
         let trees: Vec<u32> = params
             .iter()
             .map(|(x, y)| Graph::new(&self.nodes, *x, *y))
             .map(Iterator::sum)
             .collect();
-        Ok(trees.iter().fold(1, |t, u| t * u) as u64)
+        Ok(trees.iter().fold(1, |t, u| t * u) as i64)
     }
 }

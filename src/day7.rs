@@ -1,6 +1,7 @@
 use crate::Day;
 
 use std::collections::HashSet;
+use std::error::Error;
 use std::{cell::Cell, collections::HashMap};
 
 use lazy_static::lazy_static;
@@ -62,12 +63,12 @@ impl Day7 {
 }
 
 impl Day for Day7 {
-    fn solve1(&self) -> Result<u64, Box<dyn std::error::Error>> {
-        Ok(self.rules.find_node("shiny gold").len() as u64)
+    fn solve1(&self) -> Result<i64, Box<dyn Error>> {
+        Ok(self.rules.find_node("shiny gold").len() as i64)
     }
 
-    fn solve2(&self) -> Result<u64, Box<dyn std::error::Error>> {
-        Ok(self.rules.count_bags("shiny gold") - 1)
+    fn solve2(&self) -> Result<i64, Box<dyn Error>> {
+        Ok((self.rules.count_bags("shiny gold") - 1) as i64)
     }
 }
 
@@ -79,14 +80,14 @@ lazy_static! {
 #[derive(Debug)]
 struct Rule {
     id: String,
-    children: HashMap<String, u64>,
-    total_count: Cell<Option<u64>>,
+    children: HashMap<String, i64>,
+    total_count: Cell<Option<i64>>,
 }
 
 fn parse_rule(line: &str) -> Rule {
     let caps: Captures = TOP_LEVEL_RULE.captures(line).unwrap();
     let id = caps.get(1).unwrap().as_str().to_owned();
-    let children: HashMap<String, u64> = caps
+    let children: HashMap<String, i64> = caps
         .get(2)
         .unwrap()
         .as_str()
@@ -116,7 +117,7 @@ impl Rules {
         Rules { rules }
     }
 
-    fn count_bags(&self, bag: &str) -> u64 {
+    fn count_bags(&self, bag: &str) -> i64 {
         let rule = self.rules.get(bag).unwrap();
         if rule.total_count.get().is_some() {
             return rule.total_count.get().unwrap();
@@ -125,7 +126,7 @@ impl Rules {
             .children
             .iter()
             .map(|(id, count)| count * self.count_bags(id))
-            .sum::<u64>()
+            .sum::<i64>()
             + 1;
 
         self.rules
