@@ -1,6 +1,7 @@
 mod day1;
 mod day10;
 mod day11;
+mod day12;
 mod day2;
 mod day3;
 mod day4;
@@ -97,7 +98,7 @@ pub fn get_day(day: u32) -> Result<Box<dyn Day>, Box<dyn Error>> {
             9 => Ok(day9::Day9::<25>::new(lines)),
             10 => Ok(day10::Day10::new(lines)),
             11 => Ok(day11::Day11::new(lines)),
-            //12 => Ok(day12::Day12::new(lines)),
+            12 => Ok(day12::Day12::new(lines)),
             //13 => Ok(day13::Day13::new(lines)),
             //14 => Ok(day14::Day14::new(lines)),
             //15 => Ok(day15::Day15::new(lines)),
