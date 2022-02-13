@@ -1,7 +1,5 @@
 use std::collections::HashMap;
 
-use itertools::Itertools;
-
 use crate::Day;
 
 #[cfg(test)]
@@ -69,35 +67,17 @@ impl Day13 {
     }
 }
 
-fn modified_euclidean(mut a: u32, mut b: u32, a_offset: u32, b_offset: u32) -> u32 {
-    a = a - a_offset;
-    b = b - b_offset;
-    if a < b {
-        euclidean(b, a);
-    }
-    while b != 0 {
-        let temp = b;
-        b = a.rem_euclid(b);
-        a = temp;
-    }
-    a + a_offset
-}
+/**
+* Given T is the start time of the first bus, B1, and T+J is the start time of the Nth bus, BN,
+* which has an offset of J from B1.
+*
+* We first want to find T1, which is the solution for B1 and B2:
+*   T1 % B1 == 0. (T1 + 1) % B2 == 0 -> T1 % B2 == B2-1.
+*
+*/
 
-fn modified_lcm(a_step: u32, b_step: u32, a_offset: u32, b_offset: u32) -> u32 {
-    (a_step + a_offset) * (b_step + b_offset) / euclidean(a_step, b_step)
-}
-
-fn euclidean(mut a: u32, mut b: u32) -> u32 {
-    if a < b {
-        euclidean(b, a);
-    }
-    while b != 0 {
-        let temp = b;
-        b = a.rem_euclid(b);
-        a = temp;
-    }
-    a
-}
+/// Finds T such that T % B1 == B1 - D1 && T % B2 == B2 - D2.
+fn find_start_time(b1: i64, d1: i64, b2: i64, d2: i64) -> i64 {}
 
 impl Day for Day13 {
     fn solve1(&self) -> Result<i64, Box<dyn std::error::Error>> {
